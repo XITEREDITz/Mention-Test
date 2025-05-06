@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  /* Add smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+  }
+  
+  /* Animation keyframes */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Animations for specific elements */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  /* Card styling with new elevated design */
+  .card-container {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-4 border border-gray-100 dark:border-gray-700;
+  }
+  
+  /* Modern button with hover animation */
+  .modern-button {
+    @apply rounded-full px-4 py-2 bg-primary/90 hover:bg-primary text-white font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm;
+  }
+  
+  /* Modern input styling */
+  .modern-input {
+    @apply w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/30 focus:border-primary/50;
+  }
+  
+  /* Search input specific styling */
+  .search-input {
+    @apply bg-gray-100 dark:bg-gray-800 border-none rounded-full py-2 px-4 focus:ring-2 focus:ring-primary/20 text-sm;
+  }
+  
+  /* Avatar styling */
+  .avatar-circle {
+    @apply rounded-full border-2 border-white dark:border-gray-800 transition-transform hover:scale-105 shadow-sm;
+  }
+  
+  /* Status avatar styling */
+  .status-avatar {
+    @apply rounded-full border-2 border-white dark:border-gray-700 p-[2px] cursor-pointer transition-transform hover:scale-105;
+  }
+  
+  /* Status indicator ring effect */
+  .status-ring {
+    @apply bg-gradient-to-tr from-primary via-purple-500 to-pink-500 p-[2px] rounded-full shadow-lg;
+  }
+  
+  /* Add status button */
+  .status-button {
+    @apply rounded-xl border-dashed border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary transition-all duration-300 hover:shadow-lg flex items-center justify-center;
+  }
+
+  /* Status container */
+  .status-container {
+    @apply rounded-xl py-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700;
+  }
+  
+  /* Glass-like effect for cards with enhanced blur */
+  .glass-card {
+    @apply bg-white/80 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-sm border border-gray-100 dark:border-gray-700;
+  }
+  
+  /* Enhanced glass effect for special elements */
+  .glass-premium {
+    @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg rounded-xl shadow-md border border-gray-200/50 dark:border-gray-700/50;
+  }
+  
+  /* Gradient text with enhanced colors */
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-blue-400 font-bold;
+  }
+  
+  /* Badge styling */
+  .notification-badge {
+    @apply absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] text-[10px] text-white bg-red-500 rounded-full font-medium px-1;
+  }
+  
+  /* Post interaction buttons */
+  .post-action-button {
+    @apply flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200 rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800;
+  }
+
+  /* Custom size classes */
+  .w-18 {
+    width: 4.5rem;
+  }
+  
+  .h-18 {
+    height: 4.5rem;
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+  }
+
+  /* Hover effect for media in posts with subtle zoom */
+  .media-hover-effect {
+    @apply transition-all duration-500 hover:scale-[1.02] cursor-pointer;
+  }
+
+  /* Post card with modern design */
+  .post-card {
+    @apply overflow-hidden rounded-xl transition-all duration-300 hover:shadow-md border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800;
+  }
+
+  /* Post header with subtle separation */
+  .post-header {
+    @apply p-4 pb-3 flex items-center border-b border-gray-100 dark:border-gray-700/50;
+  }
+
+  /* Animated like button with enhanced animation */
+  .like-button {
+    @apply transform transition-all duration-300 hover:scale-110 active:scale-125 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-500;
+  }
+  
+  /* Already liked button */
+  .liked-button {
+    @apply text-red-500;
+  }
+
+  /* Comment section with styled scrollbar */
+  .comment-section {
+    @apply max-h-40 overflow-y-auto pt-2 pr-2;
+  }
+  
+  /* Status components with enhanced styling */
+  .status-item {
+    @apply rounded-xl transition-all duration-300 hover:shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden;
+  }
+  
+  .status-card {
+    @apply rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
+  }
+  
+  .status-create-button {
+    @apply h-40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  /* Status grid layout */
+  .status-grid {
+    @apply pb-6;
+  }
+  
+  /* Navigation styling */
+  .nav-item {
+    @apply flex items-center p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary transition-all duration-200;
+  }
+  
+  .nav-item-active {
+    @apply bg-primary/10 text-primary;
+  }
+  
+  /* Sidebar group section */
+  .sidebar-group {
+    @apply rounded-xl bg-gray-50 dark:bg-gray-800/50 p-2 my-3;
+  }
+  
+  /* Message bubble styles */
+  .message-bubble-sent {
+    @apply bg-primary text-white rounded-2xl rounded-tr-sm py-2 px-3 max-w-[80%] ml-auto shadow-sm;
+  }
+  
+  .message-bubble-received {
+    @apply bg-gray-200 dark:bg-gray-700 rounded-2xl rounded-tl-sm py-2 px-3 max-w-[80%] shadow-sm;
+  }
+  
+  /* Profile stats badge */
+  .profile-stat {
+    @apply flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center;
+  }
+  
+  /* App layout specific styles */
+  .main-content {
+    @apply bg-gray-50 dark:bg-gray-900 min-h-screen;
+  }
+  
+  .content-container {
+    @apply max-w-4xl mx-auto pb-20 md:pb-10 pt-2 px-4;
+  }
+}

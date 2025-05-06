@@ -1,0 +1,192 @@
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/context/auth-context";
+import { useWebSocketStore } from "@/lib/websocket";
+import { 
+  Home, 
+  Compass, 
+  MessageSquare, 
+  Bell, 
+  User, 
+  Settings, 
+  UserPlus, 
+  MessagesSquare,
+  LogOut,
+  PenSquare,
+  Info,
+  Heart
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { User as UserType } from "@shared/schema";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+
+export function Sidebar() {
+  const { user, logout } = useAuth();
+  const [location] = useLocation();
+  const { unreadMessages, unreadNotifications } = useWebSocketStore();
+  
+  const { data: onlineFriends = [] } = useQuery<UserType[]>({
+    queryKey: user ? [`/api/friends/${user.id}`] : ['friends-not-available'],
+    enabled: !!user
+  });
+  
+  const isActive = (path: string) => {
+    if (path === '/') return location === path;
+    return location.startsWith(path);
+  };
+  
+  // Main navigation items
+  const navItems = [
+    { path: "/", label: "Feed", icon: Home },
+    { path: "/explore", label: "Discover", icon: Compass },
+    { path: "/messages", label: "Messages", icon: MessageSquare, badge: unreadMessages },
+    { path: "/notifications", label: "Activity", icon: Bell, badge: unreadNotifications },
+    { path: "/profile", label: "Profile", icon: User },
+    { path: "/find-friends", label: "Connections", icon: UserPlus },
+    { path: "/public-chat", label: "Public Chat", icon: MessagesSquare }
+  ];
+  
+  // Actions and secondary navigation items
+  const secondaryItems = [
+    { label: "Create Post", icon: PenSquare },
+    { label: "Settings", icon: Settings },
+    { label: "About", icon: Info },
+  ];
+  
+  return (
+    <div className="h-full flex flex-col items-center py-4 space-y-5">
+      {/* Logo */}
+      {user && (
+        <div className="flex flex-col items-center">
+          <Avatar className="w-9 h-9 border-2 border-primary/30">
+            <AvatarImage src={user.avatar || ''} alt={user.displayName} />
+            <AvatarFallback>{user.displayName.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </div>
+      )}
+      
+      {/* Main navigation */}
+      <nav className="flex-1 w-full mt-8">
+        <ul className="flex flex-col items-center space-y-2">
+          {navItems.map(({ path, label, icon: Icon, badge }) => (
+            <li key={path} className="w-full flex justify-center">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to={path}>
+                    <button
+                      className={`p-3 rounded-full relative flex items-center justify-center transition-all ${
+                        isActive(path) 
+                          ? 'bg-primary text-white' 
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {typeof badge === 'number' && badge > 0 && (
+                        <Badge 
+                          variant="destructive" 
+                          className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
+                        >
+                          {badge > 9 ? '9+' : badge}
+                        </Badge>
+                      )}
+                    </button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{label}</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      
+      {/* Friends badge (abbreviated) */}
+      {onlineFriends && onlineFriends.length > 0 && (
+        <div className="w-full px-1">
+          <div className="py-2 rounded-xl bg-gray-100 dark:bg-gray-800">
+            <div className="px-3 py-1">
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400 block text-center">Online</span>
+            </div>
+            <div className="mt-1 flex flex-col items-center space-y-1 max-h-40 overflow-y-auto px-1">
+              {onlineFriends.slice(0, 3).map((friend) => (
+                <Tooltip key={friend.id}>
+                  <TooltipTrigger asChild>
+                    <Link to={`/messages/${friend.id}`}>
+                      <div className="relative">
+                        <Avatar className="w-8 h-8 border border-white dark:border-gray-900">
+                          <AvatarImage src={friend.avatar || ''} alt={friend.displayName} />
+                          <AvatarFallback>{friend.displayName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <span className="absolute bottom-0 right-0 bg-green-500 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-gray-900"></span>
+                      </div>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>{friend.displayName}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+              {onlineFriends.length > 3 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/find-friends">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-medium">
+                        +{onlineFriends.length - 3}
+                      </div>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>See all friends</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Secondary actions */}
+      <div className="mt-auto w-full">
+        <ul className="flex flex-col items-center space-y-3">
+          {secondaryItems.map(({ label, icon: Icon }) => (
+            <li key={label} className="w-full flex justify-center">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <Icon className="h-5 w-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{label}</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+          ))}
+          
+          {/* Logout button */}
+          <li className="w-full flex justify-center">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={logout}
+                  className="p-2 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Logout</p>
+              </TooltipContent>
+            </Tooltip>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
